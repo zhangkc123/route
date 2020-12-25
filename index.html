@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>路线规划</title>
+<script type="text/javascript" src="http://api.map.baidu.com/api?type=subway&v=1.0&ak=LmvIOblI0H9kiGY4RDKlOF2E2WWRubRf"></script>
+<style type="text/css">
+    #container{height:100%}
+</style>
+</head>
+<body>
+<div id="container"></div>
+<script type="text/javascript">
+    /**
+     * {
+     *     keyword: 'beijing',
+     *     name: '北京',
+     *     citycode: '131'
+     * }
+     */
+     /* globals BMapSub */
+    var subwayCityName = '北京';
+    var list = BMapSub.SubwayCitiesList;
+    var subwaycity = null;
+    for (var i = 0; i < list.length; i++) {
+        if (list[i].name === subwayCityName) {
+            subwaycity = list[i];
+            break;
+        }
+    }
+    var subway = new BMapSub.Subway('container', subwaycity.citycode);
+    var zoomControl  = new BMapSub.ZoomControl({
+        anchor: BMAPSUB_ANCHOR_BOTTOM_RIGHT,
+        offset: new BMapSub.Size(10,100)
+    });
+    subway.addControl(zoomControl);
+    subway.addEventListener('subwayloaded', function() {
+        var drct = new BMapSub.Direction(subway);
+        drct.search('苏庄', '顺义');
+    });
+    subway.addEventListener('directioncomplete', function() {
+        alert('请关注各条线路首末车时间！');
+    });
+</script>
+</body>
+</html>
